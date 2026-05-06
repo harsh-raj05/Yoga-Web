@@ -337,6 +337,83 @@
         line-height: 1.75;
     }
 
+    .plan-video-card {
+        margin-top: 1.15rem;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.56);
+        border: 1px solid rgba(255, 255, 255, 0.58);
+        box-shadow: 0 18px 38px rgba(42, 42, 39, 0.08);
+    }
+
+    .plan-video-frame {
+        aspect-ratio: 16 / 9;
+        background: rgba(42, 42, 39, 0.08);
+    }
+
+    .plan-video-frame iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+    }
+
+    .plan-video-body {
+        padding: 1rem 1.1rem 1.15rem;
+    }
+
+    .plan-video-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--plan-muted);
+        margin-bottom: 0.7rem;
+    }
+
+    .plan-video-label::before {
+        content: '';
+        width: 0.42rem;
+        height: 0.42rem;
+        border-radius: 999px;
+        background: var(--plan-clay);
+    }
+
+    .plan-video-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.45rem;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+    }
+
+    .plan-video-sub {
+        margin-top: 0.45rem;
+        color: var(--plan-muted);
+        line-height: 1.72;
+        font-size: 0.92rem;
+    }
+
+    .plan-video-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.85rem;
+    }
+
+    .plan-video-chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 0.45rem 0.75rem;
+        background: rgba(196, 217, 198, 0.28);
+        color: var(--plan-sage-dark);
+        font-size: 0.78rem;
+        font-weight: 500;
+    }
+
     .plan-footer {
         margin-top: 1.5rem;
         display: flex;
@@ -525,6 +602,28 @@
                                 No yoga sessions currently match this exact combination of goal and level. Update your preferences or add more sessions from the admin area to expand the plan.
                             </div>
                         @endforelse
+
+                        <div class="plan-video-card">
+                            <div class="plan-video-frame">
+                                <iframe
+                                    src="https://www.youtube-nocookie.com/embed/{{ $planVideoRecommendations['yoga']['youtube_id'] }}"
+                                    title="{{ $planVideoRecommendations['yoga']['title'] }}"
+                                    loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            <div class="plan-video-body">
+                                <div class="plan-video-label">Suggested yoga video</div>
+                                <div class="plan-video-title">{{ $planVideoRecommendations['yoga']['title'] }}</div>
+                                <div class="plan-video-sub">{{ $planVideoRecommendations['yoga']['subtitle'] }}</div>
+                                <div class="plan-video-meta">
+                                    <span class="plan-video-chip">{{ $planVideoRecommendations['goal_label'] }}</span>
+                                    <span class="plan-video-chip">{{ $planVideoRecommendations['level_label'] }}</span>
+                                    <span class="plan-video-chip">{{ $planVideoRecommendations['yoga']['duration'] }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -561,6 +660,28 @@
                                 No meditation sessions are available for this goal yet. You can still complete yoga sessions now and add targeted meditations later.
                             </div>
                         @endforelse
+
+                        <div class="plan-video-card">
+                            <div class="plan-video-frame">
+                                <iframe
+                                    src="https://www.youtube-nocookie.com/embed/{{ $planVideoRecommendations['meditation']['youtube_id'] }}"
+                                    title="{{ $planVideoRecommendations['meditation']['title'] }}"
+                                    loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            <div class="plan-video-body">
+                                <div class="plan-video-label">Suggested meditation video</div>
+                                <div class="plan-video-title">{{ $planVideoRecommendations['meditation']['title'] }}</div>
+                                <div class="plan-video-sub">{{ $planVideoRecommendations['meditation']['subtitle'] }}</div>
+                                <div class="plan-video-meta">
+                                    <span class="plan-video-chip">{{ $planVideoRecommendations['goal_label'] }}</span>
+                                    <span class="plan-video-chip">Recovery support</span>
+                                    <span class="plan-video-chip">{{ $planVideoRecommendations['meditation']['duration'] }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
