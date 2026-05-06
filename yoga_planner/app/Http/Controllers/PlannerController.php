@@ -28,15 +28,16 @@ class PlannerController extends Controller
         // Fetch meditation based on goal
         $meditation = MeditationSession::where('type', $preference->goal)->get();
         
-        $progress = \App\Models\Progress::where('user_id', $userId)
+        $progressDates = \App\Models\Progress::where('user_id', $userId)
             ->orderBy('date', 'desc')
-            ->get();
+            ->pluck('date')
+            ->unique()
+            ->values();
 
         $streak = 0;
-        $today = now()->toDateString();
-
-        foreach ($progress as $p) {
-            if ($p->date == $today || $p->date == now()->subDays($streak)->toDateString()) {
+        
+        foreach ($progressDates as $date) {
+            if ($date == now()->subDays($streak)->toDateString()) {
                 $streak++;
             } else {
                 break;

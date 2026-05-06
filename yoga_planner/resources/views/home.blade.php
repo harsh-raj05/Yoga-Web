@@ -26,7 +26,9 @@
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
+    background:
+      linear-gradient(145deg, rgba(250,247,240,0.86), rgba(196,217,198,0.32) 45%, rgba(240,213,188,0.28)),
+      url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=2000&q=80&auto=format&fit=crop') center top / cover fixed no-repeat;
     color: var(--charcoal);
     min-height: 100vh;
     overflow-x: hidden;
@@ -55,13 +57,32 @@
 
   /* ── NAV ── */
   nav {
-    position: fixed; top: 0; left: 0; right: 0;
+    position: fixed; top: 16px; left: 24px; right: 24px;
     z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 24px 56px;
-    background: rgba(250,247,240,0.85);
-    backdrop-filter: blur(14px);
+    background:
+      linear-gradient(120deg, rgba(255,254,249,0.92), rgba(255,254,249,0.8) 46%, rgba(196,217,198,0.24)),
+      url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1400&q=80&auto=format&fit=crop') center center / cover no-repeat;
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--line);
+    border: 1px solid rgba(255,255,255,0.62);
+    border-radius: 24px;
+    box-shadow: 0 18px 44px rgba(42,42,39,0.1);
+    overflow: hidden;
+  }
+  nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(255,254,249,0.22), rgba(255,254,249,0.06)),
+      radial-gradient(circle at right top, rgba(240,213,188,0.22) 0%, transparent 28%);
+    pointer-events: none;
+  }
+  nav > * {
+    position: relative;
+    z-index: 1;
   }
   .nav-logo {
     font-family: 'Playfair Display', serif;
@@ -95,9 +116,38 @@
     align-items: center;
     padding: 120px 56px 80px;
     gap: 64px;
-    max-width: 1280px; margin: 0 auto;
+    max-width: 1280px; margin: 18px auto 0;
+    border-radius: 38px;
+    overflow: hidden;
+    background:
+      linear-gradient(115deg, rgba(255,254,249,0.92) 8%, rgba(255,254,249,0.76) 38%, rgba(62,94,66,0.2) 100%),
+      url('https://images.unsplash.com/photo-1545389336-cf090694435e?w=1800&q=80&auto=format&fit=crop') center center / cover no-repeat;
+    border: 1px solid rgba(255,255,255,0.62);
+    box-shadow: 0 30px 90px rgba(42,42,39,0.12);
   }
-  .hero-left { display: flex; flex-direction: column; gap: 36px; }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top right, rgba(240,213,188,0.38) 0%, transparent 28%),
+      radial-gradient(circle at bottom left, rgba(196,217,198,0.3) 0%, transparent 26%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 160px;
+    background: linear-gradient(to top, rgba(255,254,249,0.22), transparent);
+    pointer-events: none;
+  }
+  .hero-left {
+    position: relative;
+    z-index: 1;
+    display: flex; flex-direction: column; gap: 36px;
+    padding: 16px 0;
+  }
 
   .eyebrow {
     display: inline-flex; align-items: center; gap: 10px;
@@ -173,12 +223,15 @@
   .hero-right {
     position: relative;
     display: flex; align-items: center; justify-content: center;
+    z-index: 1;
   }
   .hero-card {
-    background: var(--warm-white);
-    border: 1px solid var(--line); border-radius: 28px;
+    background: rgba(255,254,249,0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.72); border-radius: 28px;
     padding: 40px; width: 100%; max-width: 420px;
-    box-shadow: 0 32px 80px rgba(42,42,39,0.08);
+    box-shadow: 0 32px 80px rgba(42,42,39,0.12);
     animation: floatCard 6s ease-in-out infinite;
   }
   @keyframes floatCard {
@@ -313,10 +366,15 @@
     max-width: 1280px; margin: 0 auto; padding: 0 56px 100px;
   }
   .cta-box {
-    background: var(--sage-dark); border-radius: 28px;
+    background:
+      linear-gradient(120deg, rgba(42,42,39,0.78), rgba(62,94,66,0.84)),
+      url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1800&q=80&auto=format&fit=crop') center center / cover no-repeat;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 28px;
     padding: 80px 72px;
     display: flex; align-items: center; justify-content: space-between;
     gap: 48px; overflow: hidden; position: relative;
+    box-shadow: 0 28px 80px rgba(42,42,39,0.18);
   }
   .cta-box::before {
     content: ''; position: absolute;
@@ -325,7 +383,14 @@
     background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
-  .cta-left { max-width: 560px; }
+  .cta-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(42,42,39,0.16), rgba(42,42,39,0.02));
+    pointer-events: none;
+  }
+  .cta-left { max-width: 560px; position: relative; z-index: 1; }
   .cta-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(32px, 4vw, 48px); font-weight: 700;
@@ -334,7 +399,7 @@
   }
   .cta-title em { font-style: italic; color: var(--clay-light); }
   .cta-desc { font-size: 16px; color: rgba(250,247,240,0.65); font-weight: 300; line-height: 1.7; }
-  .cta-buttons { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+  .cta-buttons { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; position: relative; z-index: 1; }
   .btn-light {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     background: var(--cream); color: var(--charcoal);
@@ -386,9 +451,9 @@
   .hero-right { animation: fadeUp 0.8s ease 0.3s both; }
 
   @media (max-width: 900px) {
-    nav { padding: 20px 24px; }
+    nav { top: 12px; left: 12px; right: 12px; padding: 18px 20px; border-radius: 20px; }
     .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 48px; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 48px; margin: 10px 16px 0; border-radius: 28px; }
     .hero-right { display: none; }
     .features-strip { padding: 20px 24px; gap: 24px; }
     .section { padding: 64px 24px; }
@@ -407,9 +472,9 @@
 <nav>
     <a href="/" class="nav-logo">Zen<span>Flow</span></a>
     <ul class="nav-links">
-        <li><a href="#">Programs</a></li>
+        <!-- <li><a href="#">Programs</a></li>
         <li><a href="#">For You</a></li>
-        <li><a href="#">Community</a></li>
+        <li><a href="#">Community</a></li> -->
         @auth
             <li><a href="/dashboard" class="nav-cta">Dashboard →</a></li>
         @else
