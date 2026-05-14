@@ -9,13 +9,14 @@ use App\Http\Controllers\Admin\YogaController;
 use App\Http\Controllers\Admin\MeditationController;
 use App\Models\Preference;
 use App\Models\Progress;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('home');
 });
 
 Route::get('/dashboard', function () {
-    $userId = auth()->id();
+    $userId = Auth::id();
     $preference = Preference::where('user_id', $userId)->first();
 
     $completedDates = Progress::where('user_id', $userId)
