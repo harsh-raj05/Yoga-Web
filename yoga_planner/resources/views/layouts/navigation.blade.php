@@ -17,6 +17,11 @@
             'href' => url('/plan'),
             'active' => request()->is('plan'),
         ],
+        [
+            'label' => 'Immersive Practice 🧘',
+            'href' => route('practice.immersive'),
+            'active' => request()->routeIs('practice.immersive'),
+        ],
     ];
 
     if ($user?->is_admin) {

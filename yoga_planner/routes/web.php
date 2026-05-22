@@ -239,6 +239,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/plan', [PlannerController::class, 'index'])->name('plan');
     Route::post('/complete', [ProgressController::class, 'store'])->name('complete');
     Route::get('/practice/{type}/{id}', [App\Http\Controllers\PracticeController::class, 'start'])->name('practice.start');
+    Route::get('/immersive-practice', [App\Http\Controllers\PracticeController::class, 'immersive'])->name('practice.immersive');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

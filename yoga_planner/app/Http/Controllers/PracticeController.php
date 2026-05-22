@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\YogaSession;
 use App\Models\MeditationSession;
+use App\Models\Preference;
 
 class PracticeController extends Controller
 {
@@ -44,4 +45,33 @@ class PracticeController extends Controller
             'data' => $decodedData
         ]);
     }
+
+    public function immersive()
+    {
+        $userId = auth()->id();
+        $preference = Preference::where('user_id', $userId)->first();
+
+        if (!$preference) {
+            return redirect('/preferences')->with('error', 'Please set your preferences first to access the Immersive Studio.');
+        }
+
+        // Fetch yoga based on goal & level
+        $yoga = YogaSession::where('goal', $preference->goal)
+            ->where('level', $preference->experience_level)
+            ->get();
+
+        // Map preference goal to meditation type enum: ['stress_relief', 'focus', 'sleep']
+        $meditationType = match ($preference->goal) {
+            'weight_loss' => 'focus',
+            'flexibility' => 'sleep',
+            'stress_relief' => 'stress_relief',
+            default => 'focus',
+        };
+
+        // Fetch meditation based on mapped type
+        $meditation = MeditationSession::where('type', $meditationType)->get();
+
+        return view('immersive', compact('yoga', 'meditation', 'preference'));
+    }
 }
+

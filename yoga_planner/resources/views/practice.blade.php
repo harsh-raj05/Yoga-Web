@@ -499,7 +499,26 @@
     <div class="room-page">
         <div class="room-glow"></div>
 
-        <div class="room-container" id="player-container">
+        <!-- Distraction-Free Immersive Setup Notice Overlay -->
+        <div id="immersive-setup-overlay" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 17, 15, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); align-items: center; justify-content: center; text-align: center; padding: 2rem;">
+            <div style="max-width: 500px; padding: 2.5rem 2rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 36px; box-shadow: 0 35px 80px rgba(0,0,0,0.65);" class="flex flex-col items-center">
+                <span style="font-size: 4rem; display: inline-block; margin-bottom: 1.5rem; filter: drop-shadow(0 0 15px rgba(226, 180, 116, 0.35));">🌌</span>
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2.1rem; font-weight: 700; color: #fff; margin-bottom: 1rem;">Immersive Practice Space</h2>
+                <p style="font-size: 0.95rem; color: #9ca3af; line-height: 1.7; font-weight: 300; margin-bottom: 2.5rem;">
+                    You are entering your sacred distraction-free wellness zone. We will now enter full-screen mode to block out outer noise, automatically loading peaceful nature loops and breathing animations.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+                    <button onclick="activateImmersiveSession()" style="background: linear-gradient(135deg, #e2b474, #cd9a51); color: #121412; font-weight: 600; border: none; border-radius: 9999px; padding: 1.1rem 2.5rem; font-size: 1rem; cursor: pointer; box-shadow: 0 12px 30px rgba(226, 180, 116, 0.3); transition: transform 0.2s, box-shadow 0.2s; outline: none;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        Begin Full-Screen Practice 🧘
+                    </button>
+                    <a href="/immersive-practice" style="background: transparent; color: #9ca3af; border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; padding: 0.85rem 2.5rem; font-size: 0.9rem; text-decoration: none; display: inline-block; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#9ca3af'">
+                        Cancel & Return
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="room-container" id="player-container" style="transition: opacity 0.5s ease, transform 0.5s ease;">
             <!-- Left side: Session Player controls and breathing ring -->
             <section class="room-player-box">
                 <div class="room-header">
@@ -539,11 +558,26 @@
                 </div>
             </section>
 
-            <!-- Right side: Image sequence, instructions, and sound mixer -->
+            <!-- Right side: Image/Video guide, instructions, and sound mixer -->
             <section class="room-guide-box">
-                <div class="room-image-container">
-                    <img id="step-image" src="" alt="Pose guide" class="pulse-slow">
+                <div class="room-image-container" style="position: relative;">
+                    <!-- Static Guide Image with animations -->
+                    <img id="step-image" src="" alt="Pose guide" class="pulse-slow" style="width: 100%; height: 100%; object-fit: cover;">
+                    
+                    <!-- Ambient/Instructional Soothing Video -->
+                    <video id="step-video" loop muted playsinline style="display: none; width: 100%; height: 100%; object-fit: cover;"></video>
+                    
                     <div class="room-image-overlay"></div>
+
+                    <!-- Visual Style Mode Controller (Segmented Tabs) -->
+                    <div style="position: absolute; top: 1rem; left: 1rem; z-index: 10; display: flex; gap: 0.35rem; background: rgba(15, 17, 15, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 0.3rem; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <button id="view-mode-image" onclick="setVisualMode('image')" style="font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 9999px; border: none; cursor: pointer; transition: all 0.25s; color: #fff; background: rgba(255, 255, 255, 0.16); outline: none;">
+                            🌸 Pose Guide
+                        </button>
+                        <button id="view-mode-video" onclick="setVisualMode('video')" style="font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 9999px; border: none; cursor: pointer; transition: all 0.25s; color: #9ca3af; background: transparent; outline: none;">
+                            🎬 Soothing Video
+                        </button>
+                    </div>
                 </div>
 
                 <div class="room-guide-body">
@@ -553,21 +587,25 @@
                         <p class="room-guide-instructions" id="step-instruction">Sit comfortably and relax.</p>
                     </div>
 
-                    <!-- Sound Mixer Panel -->
+                    <!-- Sound Mixer Panel with Added Zen Tune Music -->
                     <div class="sound-mixer-panel">
-                        <div class="mixer-label">ambient soundscapes</div>
-                        <div class="mixer-buttons">
+                        <div class="mixer-label">ambient soundscapes & music</div>
+                        <div class="mixer-buttons" style="grid-template-columns: repeat(4, 1fr); gap: 0.45rem;">
                             <button class="mixer-btn active" id="ambient-none" onclick="setAmbientSound('none')">
-                                <span class="mixer-btn-icon">🔇</span>
-                                <span>Silence</span>
+                                <span class="mixer-btn-icon" style="font-size: 1rem;">🔇</span>
+                                <span style="font-size: 0.68rem; font-weight: 500;">Silence</span>
                             </button>
                             <button class="mixer-btn" id="ambient-rain" onclick="setAmbientSound('rain')">
-                                <span class="mixer-btn-icon">🌧️</span>
-                                <span>Forest Rain</span>
+                                <span class="mixer-btn-icon" style="font-size: 1rem;">🌧️</span>
+                                <span style="font-size: 0.68rem; font-weight: 500;">Rain</span>
                             </button>
                             <button class="mixer-btn" id="ambient-ocean" onclick="setAmbientSound('ocean')">
-                                <span class="mixer-btn-icon">🌊</span>
-                                <span>Ocean Waves</span>
+                                <span class="mixer-btn-icon" style="font-size: 1rem;">🌊</span>
+                                <span style="font-size: 0.68rem; font-weight: 500;">Ocean</span>
+                            </button>
+                            <button class="mixer-btn" id="ambient-music" onclick="setAmbientSound('music')">
+                                <span class="mixer-btn-icon" style="font-size: 1rem;">🎵</span>
+                                <span style="font-size: 0.68rem; font-weight: 500;">Zen Tune</span>
                             </button>
                         </div>
                     </div>
@@ -618,12 +656,22 @@
     let timerInterval = null;
     let isPlaying = false;
     let currentSecondsRemaining = 0;
+    let currentVisualMode = 'image'; // 'image' or 'video'
 
     // Google actions audio links for rock-solid ambient soundscapes
     const soundscapes = {
         none: "",
         rain: "https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg",
-        ocean: "https://actions.google.com/sounds/v1/water/sea_waves.ogg"
+        ocean: "https://actions.google.com/sounds/v1/water/sea_waves.ogg",
+        music: "https://actions.google.com/sounds/v1/drones/meditation_drone.ogg"
+    };
+
+    // Beautiful High-Definition relaxing nature/visual loop source clips matching session goals
+    const videoLoops = {
+        stress_relief: "https://assets.mixkit.co/videos/preview/mixkit-misty-mountains-and-forest-4112-large.mp4",
+        weight_loss: "https://assets.mixkit.co/videos/preview/mixkit-waves-crashing-on-rocks-from-above-4934-large.mp4",
+        flexibility: "https://assets.mixkit.co/videos/preview/mixkit-sun-beams-shining-through-branches-of-a-tree-4186-large.mp4",
+        meditation: "https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-loop-4708-large.mp4"
     };
 
     const ambientPlayer = document.getElementById('ambient-player');
@@ -633,6 +681,123 @@
     function initPlayer() {
         if (steps.length > 0) {
             renderStep(0);
+        }
+
+        // Detect Immersive Query Parameter and activate notice overlay
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('immersive') === '1') {
+            document.getElementById('immersive-setup-overlay').style.display = 'flex';
+            const playerContainer = document.getElementById('player-container');
+            playerContainer.style.opacity = '0.04';
+            playerContainer.style.transform = 'scale(0.96)';
+            
+            // Listen for escaping fullscreen to gracefully exit/restore
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        }
+    }
+
+    // Handles fullscreen activation
+    function activateImmersiveSession() {
+        const elem = document.documentElement;
+        
+        // Command Full Screen using standard HTML5 API
+        try {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        } catch (err) {
+            console.warn("Fullscreen request error:", err);
+        }
+
+        // Hide overlay notice and show player
+        document.getElementById('immersive-setup-overlay').style.display = 'none';
+        const playerContainer = document.getElementById('player-container');
+        playerContainer.style.opacity = '1';
+        playerContainer.style.transform = 'scale(1)';
+
+        // Start default ambient loop automatically
+        const defaultSound = "{{ $type }}" === 'yoga' ? 'rain' : 'ocean';
+        setAmbientSound(defaultSound);
+
+        // Auto-play the session timer and video
+        play();
+    }
+
+    // Watch for Escape key or manual exit of full-screen
+    function handleFullscreenChange() {
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        if (!isFullscreen) {
+            console.log("User exited full screen practice mode.");
+        }
+    }
+
+    // Swaps visual player styles: Static Illustrated pose with animations OR soothing video streams
+    function setVisualMode(mode) {
+        currentVisualMode = mode;
+        const imgEl = document.getElementById('step-image');
+        const videoEl = document.getElementById('step-video');
+        const btnImage = document.getElementById('view-mode-image');
+        const btnVideo = document.getElementById('view-mode-video');
+
+        if (mode === 'image') {
+            videoEl.style.display = 'none';
+            videoEl.pause();
+            imgEl.style.display = 'block';
+            
+            btnImage.style.background = 'rgba(255, 255, 255, 0.16)';
+            btnImage.style.color = '#fff';
+            btnVideo.style.background = 'transparent';
+            btnVideo.style.color = '#9ca3af';
+        } else {
+            imgEl.style.display = 'none';
+            videoEl.style.display = 'block';
+            
+            // Render video source and play if timer is running
+            updateVideoSource();
+            
+            if (isPlaying) {
+                videoEl.play().catch(e => console.log("Video auto-play blocked:", e));
+            } else {
+                videoEl.pause();
+            }
+
+            btnVideo.style.background = 'rgba(255, 255, 255, 0.16)';
+            btnVideo.style.color = '#fff';
+            btnImage.style.background = 'transparent';
+            btnImage.style.color = '#9ca3af';
+        }
+    }
+
+    // Updates video player source dynamically
+    function updateVideoSource() {
+        const videoEl = document.getElementById('step-video');
+        const step = steps[currentStepIndex];
+        
+        let targetSrc = '';
+        if (step && step.video) {
+            targetSrc = step.video;
+        } else {
+            // Goal or type specific fallback loop
+            if ("{{ $type }}" === 'meditation') {
+                targetSrc = videoLoops.meditation;
+            } else {
+                const goal = "{{ $session->goal }}";
+                targetSrc = videoLoops[goal] || videoLoops.stress_relief;
+            }
+        }
+
+        // Avoid re-loading if the source hasn't changed
+        if (videoEl.getAttribute('data-active-src') !== targetSrc) {
+            videoEl.src = targetSrc;
+            videoEl.setAttribute('data-active-src', targetSrc);
+            videoEl.load();
         }
     }
 
@@ -657,6 +822,17 @@
         // Reset and map custom CSS animations classes
         imgEl.className = '';
         imgEl.classList.add(step.animation_class || 'pulse-slow');
+
+        // Manage video element source dynamically
+        if (currentVisualMode === 'video') {
+            updateVideoSource();
+            const videoEl = document.getElementById('step-video');
+            if (isPlaying) {
+                videoEl.play().catch(e => console.log("Video step play blocked:", e));
+            } else {
+                videoEl.pause();
+            }
+        }
 
         // Manage button active states
         document.getElementById('btn-prev').disabled = index === 0;
@@ -689,6 +865,12 @@
         // Pulse animation state
         updatePulseState();
 
+        // Play visual step video if active
+        if (currentVisualMode === 'video') {
+            const videoEl = document.getElementById('step-video');
+            videoEl.play().catch(e => console.log("Video play failed:", e));
+        }
+
         timerInterval = setInterval(() => {
             if (currentSecondsRemaining > 0) {
                 currentSecondsRemaining--;
@@ -714,6 +896,11 @@
         
         updatePulseState();
         clearInterval(timerInterval);
+
+        // Pause step video
+        if (currentVisualMode === 'video') {
+            document.getElementById('step-video').pause();
+        }
     }
 
     function updatePulseState() {
@@ -746,7 +933,7 @@
     // Set ambient sound loops
     function setAmbientSound(soundKey) {
         // Toggle active button styling
-        ['none', 'rain', 'ocean'].forEach(key => {
+        ['none', 'rain', 'ocean', 'music'].forEach(key => {
             document.getElementById(`ambient-${key}`).classList.remove('active');
         });
         document.getElementById(`ambient-${soundKey}`).classList.add('active');
@@ -772,10 +959,21 @@
         ambientPlayer.pause();
     }
 
-    // Show peaceful final celebration
+    // Show peaceful final celebration and clear full-screen
     function finishPractice() {
         pause();
         stopAmbientSound();
+
+        // Clear Full Screen if active
+        try {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        } catch (e) {}
 
         // Play gentle finishing sound chime
         try { chimePlayer.play(); } catch(e) {}
