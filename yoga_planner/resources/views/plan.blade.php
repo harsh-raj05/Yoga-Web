@@ -472,6 +472,27 @@
         filter: brightness(1.03);
     }
 
+    .plan-session-start {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border-radius: 9999px;
+        padding: 0.55rem 1.15rem;
+        background: linear-gradient(135deg, var(--plan-sage-dark), #547659);
+        color: var(--plan-cream);
+        font-size: 0.8rem;
+        font-weight: 600;
+        box-shadow: 0 10px 20px rgba(62, 94, 66, 0.15);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+    }
+    
+    .plan-session-start:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba(62, 94, 66, 0.22);
+        color: var(--plan-cream);
+    }
+
     @media (max-width: 1024px) {
         .plan-hero,
         .plan-grid {
@@ -583,6 +604,10 @@
 
                     <div class="plan-session-list">
                         @forelse($yoga as $session)
+                            @php
+                                $isJson = str_starts_with(trim($session->description), '{');
+                                $descText = $isJson ? (json_decode($session->description, true)['intro'] ?? '') : $session->description;
+                            @endphp
                             <article class="plan-session">
                                 <div class="plan-session-head">
                                     <div>
@@ -594,8 +619,14 @@
                                 </div>
 
                                 <p class="plan-session-copy">
-                                    {{ $session->description ?: 'A focused yoga session chosen to support your current goal while matching your present level of practice.' }}
+                                    {{ $descText ?: 'A focused yoga session chosen to support your current goal while matching your present level of practice.' }}
                                 </p>
+
+                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+                                    <a href="{{ route('practice.start', ['type' => 'yoga', 'id' => $session->id]) }}" class="plan-session-start">
+                                        Start Session →
+                                    </a>
+                                </div>
                             </article>
                         @empty
                             <div class="plan-empty">
@@ -641,6 +672,10 @@
 
                     <div class="plan-session-list">
                         @forelse($meditation as $session)
+                            @php
+                                $isJson = str_starts_with(trim($session->description), '{');
+                                $descText = $isJson ? (json_decode($session->description, true)['intro'] ?? '') : $session->description;
+                            @endphp
                             <article class="plan-session">
                                 <div class="plan-session-head">
                                     <div>
@@ -652,8 +687,14 @@
                                 </div>
 
                                 <p class="plan-session-copy">
-                                    {{ $session->description ?: 'A meditation session selected to support consistency, calm, and recovery alongside your physical practice.' }}
+                                    {{ $descText ?: 'A meditation session selected to support consistency, calm, and recovery alongside your physical practice.' }}
                                 </p>
+
+                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+                                    <a href="{{ route('practice.start', ['type' => 'meditation', 'id' => $session->id]) }}" class="plan-session-start" style="background: linear-gradient(135deg, var(--plan-clay), #e08b53); box-shadow: 0 10px 20px rgba(200, 121, 65, 0.15);">
+                                        Start Session →
+                                    </a>
+                                </div>
                             </article>
                         @empty
                             <div class="plan-empty">

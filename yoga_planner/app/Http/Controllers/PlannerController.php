@@ -25,8 +25,16 @@ class PlannerController extends Controller
             ->where('level', $preference->experience_level)
             ->get();
 
-        // Fetch meditation based on goal
-        $meditation = MeditationSession::where('type', $preference->goal)->get();
+        // Map preference goal to meditation type enum: ['stress_relief', 'focus', 'sleep']
+        $meditationType = match ($preference->goal) {
+            'weight_loss' => 'focus',
+            'flexibility' => 'sleep',
+            'stress_relief' => 'stress_relief',
+            default => 'focus',
+        };
+
+        // Fetch meditation based on mapped type
+        $meditation = MeditationSession::where('type', $meditationType)->get();
         
         $progressDates = \App\Models\Progress::where('user_id', $userId)
             ->orderBy('date', 'desc')

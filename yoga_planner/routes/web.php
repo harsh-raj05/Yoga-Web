@@ -224,7 +224,7 @@ Route::get('/dashboard', function () {
         ];
     }
 
-    return view('dashboard', compact('preference', 'videoRecommendations', 'dashboardStats', 'activityMetrics'));
+    return view('dashboard', compact('preference', 'videoRecommendations', 'dashboardStats', 'activityMetrics', 'completedDates'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -238,6 +238,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/plan', [PlannerController::class, 'index'])->name('plan');
     Route::post('/complete', [ProgressController::class, 'store'])->name('complete');
+    Route::get('/practice/{type}/{id}', [App\Http\Controllers\PracticeController::class, 'start'])->name('practice.start');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

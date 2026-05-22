@@ -645,6 +645,7 @@
     .du-video-grid { grid-template-columns: 1fr; }
     .du-video-head { flex-direction: column; align-items: flex-start; }
     .du-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .du-analytics-section { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 480px) {
@@ -746,20 +747,178 @@
         </div>
     </div>
 
-    <div class="du-section-label">Your activity progress</div>
-    <div class="du-progress-grid">
-        @foreach($activityMetrics as $metric)
-            <div class="du-progress-card du-glass">
-                <div class="du-progress-head">
-                    <div class="du-progress-name">{{ $metric['name'] }}</div>
-                    <div class="du-progress-pct">{{ $metric['pct'] }}%</div>
-                </div>
-                <div class="du-bar-bg">
-                    <div class="du-bar {{ $metric['bar_class'] }}" data-w="{{ $metric['pct'] }}"></div>
-                </div>
-                <div class="du-progress-meta">{{ $metric['meta'] }}</div>
+    <div class="du-analytics-section" style="margin-top: 36px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; animation: duUp 0.55s ease 0.3s both;">
+        <!-- Left: Activity Progress & Charts -->
+        <div>
+            <div class="du-section-label" style="margin-top: 0; margin-bottom: 14px;">Practice Consistency & Progress</div>
+            <div class="du-progress-grid" style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 20px;">
+                @foreach($activityMetrics as $metric)
+                    <div class="du-progress-card du-glass">
+                        <div class="du-progress-head">
+                            <div class="du-progress-name">{{ $metric['name'] }}</div>
+                            <div class="du-progress-pct">{{ $metric['pct'] }}%</div>
+                        </div>
+                        <div class="du-bar-bg">
+                            <div class="du-bar {{ $metric['bar_class'] }}" data-w="{{ $metric['pct'] }}"></div>
+                        </div>
+                        <div class="du-progress-meta">{{ $metric['meta'] }}</div>
+                    </div>
+                @endforeach
             </div>
-        @endforeach
+
+            <!-- SVG Charts Card -->
+            <div class="du-glass" style="border-radius: 22px; padding: 24px; position: relative;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span style="font-size: 13.5px; font-weight: 500; color: var(--charcoal);">Weekly Flow Trend</span>
+                    <span style="font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase;">Last 7 Days</span>
+                </div>
+                <!-- Beautiful dynamic SVG Chart -->
+                <div style="height: 120px; width: 100%;">
+                    <svg viewBox="0 0 400 120" style="width: 100%; height: 100%; overflow: visible;">
+                        <!-- Grid lines -->
+                        <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(42,42,39,0.06)" stroke-dasharray="4 4" />
+                        <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(42,42,39,0.06)" stroke-dasharray="4 4" />
+                        <line x1="0" y1="100" x2="400" y2="100" stroke="rgba(42,42,39,0.06)" stroke-dasharray="4 4" />
+
+                        @php
+                            // Let's generate a nice curved flow line based on the user's weekly streak or dummy trend values that feel alive!
+                            $points = [];
+                            $dates = [];
+                            $todayDate = now()->startOfDay();
+                            $lookup = $completedDates->flip();
+                            for($i = 6; $i >= 0; $i--) {
+                                $d = $todayDate->copy()->subDays($i);
+                                $dates[] = $d->format('D');
+                                $hasPractice = $lookup->has($d->toDateString());
+                                // Y coordinate: 95 is bottom, 30 is top
+                                $points[] = $hasPractice ? 30 : 95;
+                            }
+
+                            // Construct SVG path points
+                            $pathData = "";
+                            $areaData = "M 0,100";
+                            foreach($points as $idx => $y) {
+                                $x = $idx * 66.6; // evenly spaced 400 / 6
+                                if($idx === 0) {
+                                    $pathData .= "M $x,$y";
+                                } else {
+                                    $prevX = ($idx - 1) * 66.6;
+                                    $prevY = $points[$idx - 1];
+                                    // bezier control points
+                                    $cp1x = $prevX + 33.3;
+                                    $cp1y = $prevY;
+                                    $cp2x = $x - 33.3;
+                                    $cp2y = $y;
+                                    $pathData .= " C $cp1x,$cp1y $cp2x,$cp2y $x,$y";
+                                }
+                                $areaData .= " L $x,$y";
+                            }
+                            $areaData .= " L 400,100 Z";
+                        @endphp
+
+                        <!-- Gradient Area -->
+                        <defs>
+                            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--sage-dark)" stop-opacity="0.25" />
+                                <stop offset="100%" stop-color="var(--sage-dark)" stop-opacity="0.0" />
+                            </linearGradient>
+                        </defs>
+                        <path d="{{ $areaData }}" fill="url(#chartGrad)" />
+
+                        <!-- Main Line -->
+                        <path d="{{ $pathData }}" fill="none" stroke="var(--sage-dark)" stroke-width="3.5" stroke-linecap="round" />
+
+                        <!-- Circles on points -->
+                        @foreach($points as $idx => $y)
+                            @php $x = $idx * 66.6; @endphp
+                            <circle cx="{{ $x }}" cy="{{ $y }}" r="5" fill="var(--warm-white)" stroke="var(--sage-dark)" stroke-width="2.5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));" />
+                            <!-- Label underneath -->
+                            <text x="{{ $x }}" y="118" font-size="9" fill="var(--muted)" text-anchor="middle" font-family="DM Sans, sans-serif">{{ $dates[$idx] }}</text>
+                        @endforeach
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Monthly Calendar -->
+        <div>
+            <div class="du-section-label" style="margin-top: 0; margin-bottom: 14px;">Practice Calendar</div>
+            <div class="du-glass" style="border-radius: 22px; padding: 26px; height: calc(100% - 28px);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <span style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--charcoal);">
+                        {{ now()->format('F Y') }}
+                    </span>
+                    <div style="display: flex; gap: 6px; font-size: 10.5px; font-weight: 500; color: var(--muted); text-transform: uppercase;">
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--sage-light); border: 1px solid rgba(62,94,66,0.3);"></span> Completed
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Calendar Grid -->
+                @php
+                    $startOfMonth = now()->startOfMonth();
+                    $daysInMonth = now()->daysInMonth;
+                    $startDayOfWeek = $startOfMonth->dayOfWeek; // 0 (Sunday) to 6 (Saturday)
+
+                    $lookup = $completedDates->flip();
+                @endphp
+
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
+                    <!-- Weekdays headers -->
+                    @foreach(['S', 'M', 'T', 'W', 'T', 'F', 'S'] as $dayHeader)
+                        <div style="font-size: 10.5px; font-weight: 600; color: var(--muted); padding-bottom: 6px;">
+                            {{ $dayHeader }}
+                        </div>
+                    @endforeach
+
+                    <!-- Empty padding for first week days before start of month -->
+                    @for($i = 0; $i < $startDayOfWeek; $i++)
+                        <div style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; opacity: 0.15; font-size: 12.5px;">-</div>
+                    @endfor
+
+                    <!-- Month days -->
+                    @for($day = 1; $day <= $daysInMonth; $day++)
+                        @php
+                            $currentDateStr = now()->setDate(now()->year, now()->month, $day)->toDateString();
+                            $isCompleted = $lookup->has($currentDateStr);
+                            $isToday = $day === now()->day;
+                        @endphp
+
+                        <div style="
+                            aspect-ratio: 1;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 12px;
+                            font-size: 13px;
+                            font-weight: 500;
+                            position: relative;
+                            transition: all 0.2s;
+                            @if($isCompleted)
+                                background: linear-gradient(135deg, var(--sage-light), #9cc09f);
+                                color: var(--sage-dark);
+                                border: 1px solid rgba(62, 94, 66, 0.2);
+                                box-shadow: 0 4px 10px rgba(62, 94, 66, 0.12);
+                            @elseif($isToday)
+                                border: 1.5px solid var(--clay);
+                                color: var(--clay);
+                                background: rgba(240, 213, 188, 0.15);
+                            @else
+                                background: rgba(255, 255, 255, 0.25);
+                                border: 1px solid rgba(42, 42, 39, 0.04);
+                                color: var(--charcoal);
+                            @endif
+                        ">
+                            {{ $day }}
+                            @if($isCompleted)
+                                <span style="position: absolute; bottom: 3px; font-size: 7px; font-weight: 700;">✓</span>
+                            @endif
+                        </div>
+                    @endfor
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="du-video-head">
