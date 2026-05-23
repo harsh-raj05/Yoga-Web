@@ -2,6 +2,7 @@
     @php
         $goal = old('goal', $preference->goal ?? 'stress_relief');
         $experience = old('experience_level', $preference->experience_level ?? 'beginner');
+        $diet = old('dietary_preference', $preference->dietary_preference ?? 'balanced');
     @endphp
 
     <style>
@@ -586,6 +587,21 @@
                                 </select>
                                 <span class="pref-hint">Select the level that best reflects your current practice, not your ideal one.</span>
                                 @error('experience_level')
+                                    <p class="pref-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="pref-field-full">
+                                <label for="dietary_preference" class="pref-label">Dietary preference</label>
+                                <select id="dietary_preference" name="dietary_preference" class="pref-select" required>
+                                    <option value="balanced" @selected($diet === 'balanced')>Balanced (Standard / Any)</option>
+                                    <option value="vegetarian" @selected($diet === 'vegetarian')>Vegetarian (Plant-focused, dairy & eggs allowed)</option>
+                                    <option value="vegan" @selected($diet === 'vegan')>Vegan (100% plant-based, no animal products)</option>
+                                    <option value="keto" @selected($diet === 'keto')>Keto / Low-Carb (High healthy fats, low-carb)</option>
+                                    <option value="high_protein" @selected($diet === 'high_protein')>High-Protein (Lean muscle building, strength & recovery)</option>
+                                </select>
+                                <span class="pref-hint">We cross-reference this with your focus goal to build your personalized daily nutrition guide.</span>
+                                @error('dietary_preference')
                                     <p class="pref-error">{{ $message }}</p>
                                 @enderror
                             </div>

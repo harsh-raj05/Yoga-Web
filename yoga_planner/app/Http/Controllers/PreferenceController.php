@@ -20,6 +20,7 @@ class PreferenceController extends Controller
             'goal' => 'required',
             'experience_level' => 'required',
             'available_time' => 'required|integer|min:5|max:180',
+            'dietary_preference' => 'required|in:balanced,vegetarian,vegan,keto,high_protein',
         ]);
 
         Preference::updateOrCreate(
@@ -29,6 +30,7 @@ class PreferenceController extends Controller
                 'goal' => $request->goal,
                 'experience_level' => $request->experience_level,
                 'available_time' => $request->available_time,
+                'dietary_preference' => $request->dietary_preference,
             ]
         );
 

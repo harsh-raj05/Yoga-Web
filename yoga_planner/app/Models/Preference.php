@@ -12,5 +12,6 @@ class Preference extends Model
         'goal',
         'experience_level',
         'available_time',
+        'dietary_preference',
     ];
 }

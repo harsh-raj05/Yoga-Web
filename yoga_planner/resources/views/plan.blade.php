@@ -21,6 +21,13 @@
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+    
+    .hover-scale-img {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .hover-scale-img:hover {
+        transform: scale(1.05) !important;
+    }
 
     :root {
         --plan-sage-light: #c4d9c6;
@@ -607,25 +614,34 @@
                             @php
                                 $isJson = str_starts_with(trim($session->description), '{');
                                 $descText = $isJson ? (json_decode($session->description, true)['intro'] ?? '') : $session->description;
+                                $stepsArr = $isJson ? (json_decode($session->description, true)['steps'] ?? []) : [];
+                                $coverImg = !empty($stepsArr) ? $stepsArr[0]['image'] : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80&auto=format&fit=crop';
                             @endphp
-                            <article class="plan-session">
-                                <div class="plan-session-head">
+                            <article class="plan-session" style="display: flex; flex-direction: column; overflow: hidden; border-radius: 24px; padding: 0;">
+                                <div style="height: 180px; width: 100%; overflow: hidden; position: relative;">
+                                    <img src="{{ $coverImg }}" alt="{{ $session->name }}" style="width: 100%; height: 100%; object-fit: cover;" class="hover-scale-img">
+                                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(42, 42, 39, 0.85) 0%, rgba(42, 42, 39, 0.1) 80%);"></div>
+                                    <span class="plan-duration" style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); color: var(--plan-ink); border: 1px solid rgba(255, 255, 255, 0.8);">{{ $session->duration }} min</span>
+                                </div>
+                                <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                                     <div>
-                                        <h3 class="plan-session-title">{{ $session->name }}</h3>
-                                        <p class="plan-session-meta">{{ $goalLabel }} . {{ ucfirst($session->level) }}</p>
+                                        <div class="plan-session-head" style="margin-bottom: 0.5rem; border: none; padding: 0;">
+                                            <div>
+                                                <h3 class="plan-session-title" style="font-size: 1.25rem;">{{ $session->name }}</h3>
+                                                <p class="plan-session-meta" style="margin-top: 0.15rem;">{{ $goalLabel }} . {{ ucfirst($session->level) }}</p>
+                                            </div>
+                                        </div>
+
+                                        <p class="plan-session-copy" style="margin-bottom: 1.25rem;">
+                                            {{ $descText ?: 'A focused yoga session chosen to support your current goal while matching your present level of practice.' }}
+                                        </p>
                                     </div>
 
-                                    <span class="plan-duration">{{ $session->duration }} min</span>
-                                </div>
-
-                                <p class="plan-session-copy">
-                                    {{ $descText ?: 'A focused yoga session chosen to support your current goal while matching your present level of practice.' }}
-                                </p>
-
-                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-                                    <a href="{{ route('practice.start', ['type' => 'yoga', 'id' => $session->id]) }}" class="plan-session-start">
-                                        Start Session →
-                                    </a>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <a href="{{ route('practice.start', ['type' => 'yoga', 'id' => $session->id]) }}" class="plan-session-start">
+                                            Start Session →
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         @empty
@@ -675,25 +691,34 @@
                             @php
                                 $isJson = str_starts_with(trim($session->description), '{');
                                 $descText = $isJson ? (json_decode($session->description, true)['intro'] ?? '') : $session->description;
+                                $stepsArr = $isJson ? (json_decode($session->description, true)['steps'] ?? []) : [];
+                                $coverImg = !empty($stepsArr) ? $stepsArr[0]['image'] : 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80&auto=format&fit=crop';
                             @endphp
-                            <article class="plan-session">
-                                <div class="plan-session-head">
+                            <article class="plan-session" style="display: flex; flex-direction: column; overflow: hidden; border-radius: 24px; padding: 0;">
+                                <div style="height: 180px; width: 100%; overflow: hidden; position: relative;">
+                                    <img src="{{ $coverImg }}" alt="{{ $session->name }}" style="width: 100%; height: 100%; object-fit: cover;" class="hover-scale-img">
+                                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(42, 42, 39, 0.85) 0%, rgba(42, 42, 39, 0.1) 80%);"></div>
+                                    <span class="plan-duration" style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); color: var(--plan-ink); border: 1px solid rgba(255, 255, 255, 0.8);">{{ $session->duration }} min</span>
+                                </div>
+                                <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                                     <div>
-                                        <h3 class="plan-session-title">{{ $session->name }}</h3>
-                                        <p class="plan-session-meta">{{ $goalLabel }} support</p>
+                                        <div class="plan-session-head" style="margin-bottom: 0.5rem; border: none; padding: 0;">
+                                            <div>
+                                                <h3 class="plan-session-title" style="font-size: 1.25rem;">{{ $session->name }}</h3>
+                                                <p class="plan-session-meta" style="margin-top: 0.15rem;">{{ $goalLabel }} support</p>
+                                            </div>
+                                        </div>
+
+                                        <p class="plan-session-copy" style="margin-bottom: 1.25rem;">
+                                            {{ $descText ?: 'A meditation session selected to support consistency, calm, and recovery alongside your physical practice.' }}
+                                        </p>
                                     </div>
 
-                                    <span class="plan-duration">{{ $session->duration }} min</span>
-                                </div>
-
-                                <p class="plan-session-copy">
-                                    {{ $descText ?: 'A meditation session selected to support consistency, calm, and recovery alongside your physical practice.' }}
-                                </p>
-
-                                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-                                    <a href="{{ route('practice.start', ['type' => 'meditation', 'id' => $session->id]) }}" class="plan-session-start" style="background: linear-gradient(135deg, var(--plan-clay), #e08b53); box-shadow: 0 10px 20px rgba(200, 121, 65, 0.15);">
-                                        Start Session →
-                                    </a>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <a href="{{ route('practice.start', ['type' => 'meditation', 'id' => $session->id]) }}" class="plan-session-start" style="background: linear-gradient(135deg, var(--plan-clay), #e08b53); box-shadow: 0 10px 20px rgba(200, 121, 65, 0.15);">
+                                            Start Session →
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         @empty
@@ -724,6 +749,88 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Brand-New Nutritional Diet Plan Section -->
+            <section class="plan-card" style="margin-top: 2rem;">
+                <div class="plan-card-head" style="margin-bottom: 2rem;">
+                    <div>
+                        <span class="plan-kicker" style="background: rgba(200, 121, 65, 0.08); color: var(--plan-clay);">Daily Nutrition Guide</span>
+                        <h2 class="plan-card-title" style="margin-top: 0.75rem;">Your {{ $dietLabel }}</h2>
+                        <p class="plan-card-copy">
+                            Highly nourishing daily meals designed to support your **{{ $goalLabel }}** goal while respecting your **{{ ucfirst(str_replace('_', ' ', $preference->dietary_preference ?? 'balanced')) }}** dietary preference.
+                        </p>
+                    </div>
+                    <span class="plan-pill" style="background: rgba(200, 121, 65, 0.09); border: 1px solid rgba(200, 121, 65, 0.2); color: var(--plan-clay); padding: 0.55rem 0.9rem;">
+                        🍱 Fuel Space
+                    </span>
+                </div>
+
+                <!-- Meals Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                    @foreach($dietMeals as $meal)
+                        <article style="background: rgba(255, 255, 255, 0.52); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <!-- Unsplash Food Image -->
+                            <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
+                                <img src="{{ $meal['image'] }}" alt="{{ $meal['name'] }}" style="width: 100%; height: 100%; object-fit: cover;" class="hover-scale-img">
+                                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);"></div>
+                                <span style="position: absolute; top: 1rem; left: 1rem; background: rgba(42, 42, 39, 0.85); color: #fff; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 0.75rem; border-radius: 9999px;">
+                                    {{ $meal['type'] }}
+                                </span>
+                                <span style="position: absolute; bottom: 0.75rem; right: 0.75rem; color: #fff; font-size: 0.88rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
+                                    🔥 {{ $meal['calories'] }} kcal
+                                </span>
+                            </div>
+
+                            <!-- Meal Details -->
+                            <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--plan-ink); line-height: 1.2;">
+                                        {{ $meal['name'] }}
+                                    </h3>
+                                    
+                                    <!-- Macro Breakdown Badges -->
+                                    <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(62, 94, 66, 0.08); color: var(--plan-sage-dark); padding: 0.2rem 0.5rem; border-radius: 6px;">
+                                            🌾 C: {{ $meal['macros']['carbs'] }}
+                                        </span>
+                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(200, 121, 65, 0.08); color: var(--plan-clay); padding: 0.2rem 0.5rem; border-radius: 6px;">
+                                            🥩 P: {{ $meal['macros']['protein'] }}
+                                        </span>
+                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(42, 42, 39, 0.06); color: var(--plan-muted); padding: 0.2rem 0.5rem; border-radius: 6px;">
+                                            🥑 F: {{ $meal['macros']['fat'] }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Quick Prep Expandable Accordion/Details -->
+                                    <details style="cursor: pointer; border-top: 1px solid rgba(42, 42, 39, 0.08); padding-top: 0.75rem;">
+                                        <summary style="font-size: 0.78rem; font-weight: 600; color: var(--plan-muted); outline: none; display: flex; align-items: center; gap: 0.25rem;">
+                                            <span>Preparation & Recipe</span>
+                                        </summary>
+                                        
+                                        <!-- Ingredients -->
+                                        <div style="margin-top: 0.75rem;">
+                                            <h4 style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--plan-ink);">Ingredients</h4>
+                                            <ul style="list-style-type: disc; list-style-position: inside; padding-left: 0.25rem; font-size: 0.8rem; color: var(--plan-muted); line-height: 1.5; margin-top: 0.35rem;">
+                                                @foreach($meal['ingredients'] as $ing)
+                                                    <li>{{ $ing }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+
+                                        <!-- Instructions -->
+                                        <div style="margin-top: 0.75rem;">
+                                            <h4 style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--plan-ink);">Preparation Steps</h4>
+                                            <p style="font-size: 0.8rem; color: var(--plan-muted); line-height: 1.5; margin-top: 0.35rem;">
+                                                {{ $meal['instructions'] }}
+                                            </p>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
                 </div>
             </section>
 
