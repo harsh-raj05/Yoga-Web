@@ -536,6 +536,149 @@
             width: 100%;
         }
     }
+
+    /* Premium Redesigned Nutrition Section Styles */
+    .nutrition-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .nutrition-card {
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 28px;
+        padding: 1.75rem;
+        box-shadow: 0 16px 36px rgba(42, 42, 39, 0.04);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+
+    .nutrition-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 22px 48px rgba(42, 42, 39, 0.08);
+    }
+
+    .nutrition-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(42, 42, 39, 0.08);
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .nutrition-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--plan-ink);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nutrition-card-subtitle {
+        font-size: 0.82rem;
+        color: var(--plan-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+    }
+
+    .nutrition-split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+
+    .nutrition-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+
+    .nutrition-col-title {
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding-bottom: 0.4rem;
+        border-bottom: 2px solid rgba(42, 42, 39, 0.05);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .nutrition-col-veg {
+        color: var(--plan-sage-dark);
+        border-color: rgba(62, 94, 66, 0.15) !important;
+    }
+
+    .nutrition-col-nonveg {
+        color: var(--plan-clay);
+        border-color: rgba(200, 121, 65, 0.15) !important;
+    }
+
+    .nutrition-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 0.85rem;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 14px;
+        font-size: 0.88rem;
+        line-height: 1.3;
+        color: var(--plan-ink);
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nutrition-item:hover {
+        transform: scale(1.02);
+        background: rgba(255, 255, 255, 0.88);
+        border-color: rgba(42, 42, 39, 0.1);
+    }
+
+    .nutrition-item-name {
+        font-weight: 500;
+    }
+
+    .nutrition-kcal {
+        font-size: 0.76rem;
+        font-weight: 600;
+        padding: 0.2rem 0.55rem;
+        border-radius: 9999px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .nutrition-kcal-veg {
+        background: rgba(62, 94, 66, 0.08);
+        color: var(--plan-sage-dark);
+    }
+
+    .nutrition-kcal-nonveg {
+        background: rgba(200, 121, 65, 0.08);
+        color: var(--plan-clay);
+    }
+
+    @media (max-width: 1024px) {
+        .nutrition-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .nutrition-split {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+    }
     </style>
 
     <div class="plan-page">
@@ -749,17 +892,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </section>
-
-            <!-- Brand-New Nutritional Diet Plan Section -->
+            <!-- Redesigned Nutritional Diet Plan Section -->
             <section class="plan-card" style="margin-top: 2rem;">
                 <div class="plan-card-head" style="margin-bottom: 2rem;">
                     <div>
                         <span class="plan-kicker" style="background: rgba(200, 121, 65, 0.08); color: var(--plan-clay);">Daily Nutrition Guide</span>
                         <h2 class="plan-card-title" style="margin-top: 0.75rem;">Your {{ $dietLabel }}</h2>
                         <p class="plan-card-copy">
-                            Highly nourishing daily meals designed to support your **{{ $goalLabel }}** goal while respecting your **{{ ucfirst(str_replace('_', ' ', $preference->dietary_preference ?? 'balanced')) }}** dietary preference.
+                            Highly balanced daily suggestions designed to support your <strong>{{ $goalLabel }}</strong> goal. Explore Vegetarian and Non-Vegetarian choices for every slot.
                         </p>
                     </div>
                     <span class="plan-pill" style="background: rgba(200, 121, 65, 0.09); border: 1px solid rgba(200, 121, 65, 0.2); color: var(--plan-clay); padding: 0.55rem 0.9rem;">
@@ -767,66 +908,60 @@
                     </span>
                 </div>
 
-                <!-- Meals Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
-                    @foreach($dietMeals as $meal)
-                        <article style="background: rgba(255, 255, 255, 0.52); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                            <!-- Unsplash Food Image -->
-                            <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                                <img src="{{ $meal['image'] }}" alt="{{ $meal['name'] }}" style="width: 100%; height: 100%; object-fit: cover;" class="hover-scale-img">
-                                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);"></div>
-                                <span style="position: absolute; top: 1rem; left: 1rem; background: rgba(42, 42, 39, 0.85); color: #fff; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 0.75rem; border-radius: 9999px;">
-                                    {{ $meal['type'] }}
-                                </span>
-                                <span style="position: absolute; bottom: 0.75rem; right: 0.75rem; color: #fff; font-size: 0.88rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
-                                    🔥 {{ $meal['calories'] }} kcal
-                                </span>
+                <!-- 2x2 Grid of Meal Slot Cards -->
+                <div class="nutrition-grid">
+                    @php
+                        $slots = [
+                            'breakfast' => ['name' => 'Breakfast', 'icon' => '🌅', 'subtitle' => 'Energizing Morning Fuel'],
+                            'lunch' => ['name' => 'Lunch', 'icon' => '☀️', 'subtitle' => 'Nourishing Midday Recharge'],
+                            'dinner' => ['name' => 'Dinner', 'icon' => '🌙', 'subtitle' => 'Restorative Evening Recovery'],
+                            'snacks' => ['name' => 'Snacks', 'icon' => '🍎', 'subtitle' => 'Steady Energy Support']
+                        ];
+                    @endphp
+
+                    @foreach($slots as $key => $slot)
+                        <article class="nutrition-card">
+                            <div class="nutrition-card-head">
+                                <div>
+                                    <h3 class="nutrition-card-title">
+                                        <span>{{ $slot['icon'] }}</span>
+                                        <span>{{ $slot['name'] }}</span>
+                                    </h3>
+                                    <span class="nutrition-card-subtitle">{{ $slot['subtitle'] }}</span>
+                                </div>
                             </div>
 
-                            <!-- Meal Details -->
-                            <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                                <div>
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--plan-ink); line-height: 1.2;">
-                                        {{ $meal['name'] }}
-                                    </h3>
-                                    
-                                    <!-- Macro Breakdown Badges -->
-                                    <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(62, 94, 66, 0.08); color: var(--plan-sage-dark); padding: 0.2rem 0.5rem; border-radius: 6px;">
-                                            🌾 C: {{ $meal['macros']['carbs'] }}
-                                        </span>
-                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(200, 121, 65, 0.08); color: var(--plan-clay); padding: 0.2rem 0.5rem; border-radius: 6px;">
-                                            🥩 P: {{ $meal['macros']['protein'] }}
-                                        </span>
-                                        <span style="font-size: 0.68rem; font-weight: 600; background: rgba(42, 42, 39, 0.06); color: var(--plan-muted); padding: 0.2rem 0.5rem; border-radius: 6px;">
-                                            🥑 F: {{ $meal['macros']['fat'] }}
-                                        </span>
-                                    </div>
+                            <div class="nutrition-split">
+                                <!-- Vegetarian Options -->
+                                <div class="nutrition-col">
+                                    <h4 class="nutrition-col-title nutrition-col-veg">
+                                        <span>🌿</span>
+                                        <span>Vegetarian</span>
+                                    </h4>
+                                    @isset($nutritionPlan[$key]['veg'])
+                                        @foreach($nutritionPlan[$key]['veg'] as $item)
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-item-name">{{ $item['name'] }}</span>
+                                                <span class="nutrition-kcal nutrition-kcal-veg">🔥 {{ $item['calories'] }} kcal</span>
+                                            </div>
+                                        @endforeach
+                                    @endisset
+                                </div>
 
-                                    <!-- Quick Prep Expandable Accordion/Details -->
-                                    <details style="cursor: pointer; border-top: 1px solid rgba(42, 42, 39, 0.08); padding-top: 0.75rem;">
-                                        <summary style="font-size: 0.78rem; font-weight: 600; color: var(--plan-muted); outline: none; display: flex; align-items: center; gap: 0.25rem;">
-                                            <span>Preparation & Recipe</span>
-                                        </summary>
-                                        
-                                        <!-- Ingredients -->
-                                        <div style="margin-top: 0.75rem;">
-                                            <h4 style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--plan-ink);">Ingredients</h4>
-                                            <ul style="list-style-type: disc; list-style-position: inside; padding-left: 0.25rem; font-size: 0.8rem; color: var(--plan-muted); line-height: 1.5; margin-top: 0.35rem;">
-                                                @foreach($meal['ingredients'] as $ing)
-                                                    <li>{{ $ing }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-
-                                        <!-- Instructions -->
-                                        <div style="margin-top: 0.75rem;">
-                                            <h4 style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--plan-ink);">Preparation Steps</h4>
-                                            <p style="font-size: 0.8rem; color: var(--plan-muted); line-height: 1.5; margin-top: 0.35rem;">
-                                                {{ $meal['instructions'] }}
-                                            </p>
-                                        </div>
-                                    </details>
+                                <!-- Non-Vegetarian Options -->
+                                <div class="nutrition-col">
+                                    <h4 class="nutrition-col-title nutrition-col-nonveg">
+                                        <span>🍗</span>
+                                        <span>Non-Veg</span>
+                                    </h4>
+                                    @isset($nutritionPlan[$key]['non_veg'])
+                                        @foreach($nutritionPlan[$key]['non_veg'] as $item)
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-item-name">{{ $item['name'] }}</span>
+                                                <span class="nutrition-kcal nutrition-kcal-nonveg">🔥 {{ $item['calories'] }} kcal</span>
+                                            </div>
+                                        @endforeach
+                                    @endisset
                                 </div>
                             </div>
                         </article>
